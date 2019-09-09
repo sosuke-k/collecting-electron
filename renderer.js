@@ -6,9 +6,13 @@ const outP = document.getElementById('out-text');
 const textQ = document.getElementById('question-text');
 const inputA = document.getElementById('answer-input');
 const btnAns = document.getElementById('answer-button');
+const btnHnt = document.getElementById('hint-button');
+const hntCard = document.getElementById('hint-card');
+const textHnt = document.getElementById('hint-text');
 
 btnSta.disabled = "disabled";
 btnAns.disabled = "disabled";
+btnHnt.disabled = "disabled";
 
 let questions = null;
 let current = -1;
@@ -39,6 +43,8 @@ ipc.on('return-questions', (event, args) => {
 });
 
 btnSta.addEventListener('click', function (event) {
+  btnSel.style.display = 'none';
+  btnSta.style.display = 'none';
   btnSta.disabled = "disabled";
   let now = new Date();
   let inputPath = textP.innerHTML;
@@ -48,12 +54,18 @@ btnSta.addEventListener('click', function (event) {
 
   current = 0;
   textQ.innerHTML = 'Q: ' + questions[current]['Q'];
+  textHnt.innerHTML = questions[current]['HINT'];
   questions[current]['start'] = now.format(true);
 
   btnAns.disabled = "";
+  btnHnt.disabled = "";
 })
 
 btnAns.addEventListener('click', function (event) {
+  if (this.disabled == "disabled") return;
+
+  hntCard.style.display = "none";
+
   let now = new Date();
   questions[current]['end'] = now.format(true);
   questions[current]['answer'] = inputA.value;
@@ -64,11 +76,22 @@ btnAns.addEventListener('click', function (event) {
 
   current = current + 1;
   if (current >= questions.length) {
-    textQ.innerHTML = 'finished!';
+    textQ.innerHTML = '終わり';
     btnAns.disabled = "disabled";
+    btnHnt.disabled = "disabled";
+    btnSel.style.display = 'block';
+    btnSta.style.display = 'block';
+    textP.style.display = 'block';
+    outP.style.display = 'block';
   } else {
     inputA.value = '';
     textQ.innerHTML = 'Q: ' + questions[current]['Q'];
+    textHnt.innerHTML = questions[current]['HINT'];
     questions[current]['start'] = new Date().format(true);
   }
 })
+
+btnHnt.addEventListener('click', function (event) {
+  if (this.disabled == "disabled") return;
+  hntCard.style.display = "block";
+});
