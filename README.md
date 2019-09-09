@@ -5,7 +5,7 @@ This is an electron application to collect examination information.
 
 ### Preparation
 
-You have to prepare a excel file that has `ID` and `Q` headers.
+You have to prepare a excel file that has `ID`, `Q`, and `HINT` headers.
 
 ![](./excel_sample.png)
 
