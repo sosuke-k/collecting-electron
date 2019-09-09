@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Collecting Electron</title>
+</head>
+<body>
+<h1>First, choose Excel file</h1>
+
+<button id='select-button'>Select</button>
+<div id='path-text'></div>
+
+<button id='start-button'>Start</button>
+<div id='out-text'></div>
+
+<div id='question-text'> Q: </div>
+<input type="text" id="answer-input" name="answer">
+
+<button id='answer-button'>Answer</button>
+
+</body>
+
+<script>
+    require('./renderer.js')
+</script>
+</html>

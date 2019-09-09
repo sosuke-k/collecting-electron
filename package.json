@@ -1,0 +1,23 @@
+{
+  "name": "collecting-electron",
+  "version": "1.0.0",
+  "description": "This is an electron application to collect examination information.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sosuke-k/collecting-electron.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sosuke-k/collecting-electron/issues"
+  },
+  "homepage": "https://github.com/sosuke-k/collecting-electron#readme",
+  "dependencies": {
+    "read-excel-file": "^4.0.2"
+  }
+}
