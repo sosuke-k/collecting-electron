@@ -12,7 +12,7 @@ You have to prepare a excel file that has `ID` and `Q` headers.
 
 ### Demo
 
-
+![](./demo.gif)
 
 ### Output
 
