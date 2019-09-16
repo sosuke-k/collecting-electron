@@ -7,19 +7,19 @@ This is an electron application to collect examination information.
 
 You have to prepare a excel file that has `ID`, `Q`, and `HINT` headers.
 
-![](./excel_sample.png)
+![](./data/excel_sample.png)
 
 
 ### Demo
 
-![](./demo.gif)
+![](./data/demo.gif)
 
 ### Output
 
 An output file is like below,
 
 ```
-ID,start,end,answer
-1,20190809-195719.573,20190809-195721.705,aaa
-2,20190809-195721.706,20190809-195724.189,bbb
+ID,start,first-focusin,hint,end,answer
+1,20190816-163910.541,20190816-163916.141,20190816-163928.554,20190816-163944.775,swimmer
+2,20190816-163944.776,20190816-163949.130,,20190816-163958.303,climber
 ```

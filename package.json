@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/sosuke-k/collecting-electron#readme",
   "dependencies": {
+    "jquery": "^3.4.1",
+    "materialize-css": "^1.0.0-rc.2",
     "read-excel-file": "^4.0.2"
   }
 }

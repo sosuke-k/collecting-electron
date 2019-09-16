@@ -1,18 +1,5 @@
+const $ = require('jquery');
 const ipc = require('electron').ipcRenderer;
-const btnSel = document.getElementById('select-button');
-const textP = document.getElementById('path-text');
-const btnSta = document.getElementById('start-button');
-const outP = document.getElementById('out-text');
-const textQ = document.getElementById('question-text');
-const inputA = document.getElementById('answer-input');
-const btnAns = document.getElementById('answer-button');
-const btnHnt = document.getElementById('hint-button');
-const hntCard = document.getElementById('hint-card');
-const textHnt = document.getElementById('hint-text');
-
-btnSta.disabled = "disabled";
-btnAns.disabled = "disabled";
-btnHnt.disabled = "disabled";
 
 let questions = null;
 let current = -1;
@@ -28,70 +15,110 @@ Date.prototype.format = function(msFlag) {
   }
 }
 
-
-btnSel.addEventListener('click', function (event) {
+$("#select-button").click(function (event) {
+  console.log("#select-button click");
+  if (current != -1) return;
   ipc.send('open-dialogue', null);
 });
 
-ipc.on('return-path', (event, args) => {
-  textP.innerHTML = args;
+ipc.on('return-path', function (event, args) {
+  console.log("ipc on return-path", args);
+  $("#path-text").text(args);
 });
 
 ipc.on('return-questions', (event, args) => {
+  console.log("ipc on return-questions", args);
   questions = args;
-  btnSta.disabled = "";
 });
 
-btnSta.addEventListener('click', function (event) {
-  btnSel.style.display = 'none';
-  btnSta.style.display = 'none';
-  btnSta.disabled = "disabled";
+
+function setQuestion(current) {
   let now = new Date();
-  let inputPath = textP.innerHTML;
-  let outputPath = inputPath + '.' + now.format(false) + '.csv';
-  outP.innerHTML = outputPath;
-  ipc.send('send-data', {'path': outputPath, 'data': ['ID', 'start', 'end', 'answer']});
+  $("#answer-input").val("");
+  $("#question-text").text('Q: ' + questions[current]['Q']);
+  $("#hint-text").text(questions[current]['HINT']);
+  questions[current]['start'] = now.format(true);
+  return now;
+}
+
+
+
+$("#start-button").click( function (event) {
+  console.log("#start-button click")
+
+  if (questions == null) {
+    alert("Please select an excel file.");
+    return;
+  }
+
+  $("#select-button").css("display", "none");
+  $("#start-button").css("display", "none");
 
   current = 0;
-  textQ.innerHTML = 'Q: ' + questions[current]['Q'];
-  textHnt.innerHTML = questions[current]['HINT'];
-  questions[current]['start'] = now.format(true);
+  let now = setQuestion(current);
 
-  btnAns.disabled = "";
-  btnHnt.disabled = "";
+  let inputPath = $("#path-text").text();
+  let outputPath = inputPath + '.' + now.format(false) + '.csv';
+  $("#out-text").text(outputPath);
+  ipc.send('send-data', {'path': outputPath, 'data': ['ID', 'start', 'first-focusin', 'hint', 'end', 'answer']});
 })
 
-btnAns.addEventListener('click', function (event) {
-  if (this.disabled == "disabled") return;
+$("#answer-button").click(function (event) {
+  console.log("#answer-button click");
 
-  hntCard.style.display = "none";
+  if (current >= 0 && current < questions.length) {
+    $("#hint-card").css("display", "none");
 
-  let now = new Date();
-  questions[current]['end'] = now.format(true);
-  questions[current]['answer'] = inputA.value;
+    let now = new Date();
+    questions[current]['end'] = now.format(true);
+    questions[current]['answer'] = $("#answer-input").val();
 
-  let outputPath = outP.innerHTML;
-  let data = ['ID', 'start', 'end', 'answer'].map((k) => {return questions[current][k]})
-  ipc.send('send-data', {'path': outputPath, 'data': data});
+    let outputPath = $("#out-text").text();
+    let data = ['ID', 'start', 'first-focusin', 'hint', 'end', 'answer'].map((k) => {return questions[current][k]})
+    ipc.send('send-data', {'path': outputPath, 'data': data});
 
-  current = current + 1;
-  if (current >= questions.length) {
-    textQ.innerHTML = '終わり';
-    btnAns.disabled = "disabled";
-    btnHnt.disabled = "disabled";
-    btnSel.style.display = 'block';
-    btnSta.style.display = 'block';
-    textP.style.display = 'block';
-    outP.style.display = 'block';
-  } else {
-    inputA.value = '';
-    textQ.innerHTML = 'Q: ' + questions[current]['Q'];
-    textHnt.innerHTML = questions[current]['HINT'];
-    questions[current]['start'] = new Date().format(true);
+    current = current + 1;
+    if (current >= questions.length) {
+      // End
+      $("#answer-input").val("");
+      $("#question-text").text("終わり");
+      $("#select-button").css("display", "block");
+      $("#start-button").css("display", "block");
+      $("#path-text").css("display", "block");
+      $("#out-text").css("display", "block");
+
+      questions = null;
+      current = -1;
+    } else {
+      // Next
+      setQuestion(current);
+    }
   }
-})
+});
 
-btnHnt.addEventListener('click', function (event) {
-  if (this.disabled == "disabled") return;
-  hntCard.style.display = "block";
+$("#hint-button").click(function (event) {
+  console.log("#hint-button click");
+  if (current >= 0 && current < questions.length) {
+    if ($("#hint-card").css("display") == "none") {
+      $("#hint-card").css("display", "block");
+      questions[current]['hint'] = new Date().format(true);
+    }
+  }
+});
+
+$("#answer-input").focusin(function(){
+  console.log("#answer-input focusin");
+  if (current >= 0 && current < questions.length) {
+    if (typeof(questions[current]['first-focusin']) == "undefined") {
+      questions[current]['first-focusin'] = new Date().format(true);
+    }
+  }
+});
+
+$("#answer-input").focusout(function(){
+  console.log("#answer-input focusout");
+});
+
+$('#answer-input').change(function() {
+  console.log("#answer-input change: " + $(this).val());
 });
