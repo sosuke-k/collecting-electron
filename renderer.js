@@ -5,12 +5,18 @@ let questions = null;
 let current = -1;
 
 Date.prototype.format = function(msFlag) {
-  let ymd = this.getFullYear() + ('0' + this.getMonth()).slice(-2) + ('0' + this.getDate()).slice(-2)
-  let hms = ('0' + this.getHours()).slice(-2) + ('0' + this.getMinutes()).slice(-2) + ('0' + this.getSeconds()).slice(-2)
   if (msFlag) {
+    let yyyy = this.getFullYear();
+    let m = this.getMonth();
+    let d = this.getDate();
+    let hh = ('0' + this.getHours()).slice(-2);
+    let mm = ('0' + this.getMinutes()).slice(-2);
+    let ss = ('0' + this.getSeconds()).slice(-2);
     let ms = ('00' + this.getMilliseconds()).slice(-3)
-    return ymd + '-' + hms + '.' + ms;
+    return yyyy + "/" + m + "/" + d + ' ' + hh + ":" + mm + ":" + ss + '.' + ms;
   } else {
+    let ymd = this.getFullYear() + ('0' + this.getMonth()).slice(-2) + ('0' + this.getDate()).slice(-2)
+    let hms = ('0' + this.getHours()).slice(-2) + ('0' + this.getMinutes()).slice(-2) + ('0' + this.getSeconds()).slice(-2)
     return ymd + hms;
   }
 }
