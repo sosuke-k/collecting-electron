@@ -29,6 +29,11 @@ ipc.on('return-path', function (event, args) {
 ipc.on('return-questions', (event, args) => {
   console.log("ipc on return-questions", args);
   questions = args;
+
+  $("#path-text").css("display", "none");
+  $("#out-text").css("display", "none");
+
+  $("#question-text").text("START を押して開始");
 });
 
 
@@ -93,6 +98,8 @@ $("#answer-button").click(function (event) {
       // Next
       setQuestion(current);
     }
+  } else {
+    alert("Not yet started");
   }
 });
 
@@ -103,6 +110,8 @@ $("#hint-button").click(function (event) {
       $("#hint-card").css("display", "block");
       questions[current]['hint'] = new Date().format(true);
     }
+  } else {
+    alert("Not yet started");
   }
 });
 
