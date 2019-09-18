@@ -1,6 +1,6 @@
 {
   "name": "collecting-electron",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "This is an electron application to collect examination information.",
   "main": "index.js",
   "scripts": {
