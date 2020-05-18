@@ -4,6 +4,8 @@
   "description": "This is an electron application to collect examination information.",
   "main": "index.js",
   "scripts": {
+    "dev": "electron .",
+    "build": "electron-packager . --electronVersion=8.3.0 --overwrite --out out --ignore data",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,5 +23,9 @@
     "jquery": "^3.4.1",
     "materialize-css": "^1.0.0-rc.2",
     "read-excel-file": "^4.0.2"
+  },
+  "devDependencies": {
+    "electron": "^8.3.0",
+    "electron-packager": "^14.2.1"
   }
 }
