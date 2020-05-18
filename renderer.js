@@ -5,18 +5,18 @@ let questions = null;
 let current = -1;
 
 Date.prototype.format = function(msFlag) {
+  let yyyy = this.getFullYear();
+  let m = this.getMonth() + 1;
+  let d = this.getDate();
+  let hh = ('0' + this.getHours()).slice(-2);
+  let mm = ('0' + this.getMinutes()).slice(-2);
+  let ss = ('0' + this.getSeconds()).slice(-2);
   if (msFlag) {
-    let yyyy = this.getFullYear();
-    let m = this.getMonth();
-    let d = this.getDate();
-    let hh = ('0' + this.getHours()).slice(-2);
-    let mm = ('0' + this.getMinutes()).slice(-2);
-    let ss = ('0' + this.getSeconds()).slice(-2);
     let ms = ('00' + this.getMilliseconds()).slice(-3)
     return yyyy + "/" + m + "/" + d + ' ' + hh + ":" + mm + ":" + ss + '.' + ms;
   } else {
-    let ymd = this.getFullYear() + ('0' + this.getMonth()).slice(-2) + ('0' + this.getDate()).slice(-2)
-    let hms = ('0' + this.getHours()).slice(-2) + ('0' + this.getMinutes()).slice(-2) + ('0' + this.getSeconds()).slice(-2)
+    let ymd = yyyy + ('0' + m).slice(-2) + ('0' + d).slice(-2);
+    let hms = hh + mm + ss;
     return ymd + hms;
   }
 }
@@ -71,7 +71,7 @@ $("#start-button").click( function (event) {
   let inputPath = $("#path-text").text();
   let outputPath = inputPath + '.' + now.format(false) + '.csv';
   $("#out-text").text(outputPath);
-  ipc.send('send-data', {'path': outputPath, 'data': ['ID', 'start', 'first-focusin', 'hint', 'end', 'answer']});
+  ipc.send('send-data', {'path': outputPath, 'data': ['ID', 'start', 'first-focusin', 'hint', 'end', 'start~end', 'start~first-focusin', 'first-focusin~end', 'answer']});
 })
 
 $("#answer-button").click(function (event) {
@@ -84,8 +84,15 @@ $("#answer-button").click(function (event) {
     questions[current]['end'] = now.format(true);
     questions[current]['answer'] = $("#answer-input").val();
 
+    // Add elapsed milliseconds
+    questions[current]["start~end"] = new Date(questions[current]['end']) - new Date(questions[current]['start']);
+    if (questions[current]['first-focusin']) {
+        questions[current]["start~first-focusin"] = new Date(questions[current]['first-focusin']) - new Date(questions[current]['start']);
+        questions[current]["first-focusin~end"] = new Date(questions[current]['end']) - new Date(questions[current]['first-focusin']);
+    }
+
     let outputPath = $("#out-text").text();
-    let data = ['ID', 'start', 'first-focusin', 'hint', 'end', 'answer'].map((k) => {return questions[current][k]})
+    let data = ['ID', 'start', 'first-focusin', 'hint', 'end', 'start~end', 'start~first-focusin', 'first-focusin~end', 'answer'].map((k) => {return questions[current][k]})
     ipc.send('send-data', {'path': outputPath, 'data': data});
 
     current = current + 1;
