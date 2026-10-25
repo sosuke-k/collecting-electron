@@ -25,7 +25,7 @@
     "read-excel-file": "^4.0.2"
   },
   "devDependencies": {
-    "electron": "^8.3.0",
+    "electron": "^42.11.16",
     "electron-packager": "^14.2.1"
   }
 }
